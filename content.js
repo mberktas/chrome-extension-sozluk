@@ -8,47 +8,49 @@ window.addEventListener("mousedown", elementKaldir);
 
 let a = document.createElement("turkce-sozluk");
 var sonuc, tur, ornekCumle;
-let b = a.attachShadow({mode: 'open'})
+let b = a.attachShadow({
+  mode: 'open'
+})
 
 function elementKaldir() {
   if (document.body.appendChild(a)) a.parentNode.removeChild(a);
 }
 
-function seciliKelime() {
-  let pozisyon = mousePozisyon();
-  let seciliKelime = window.getSelection().toString().toLowerCase();
-  let url = "https://sozluk.gov.tr/gts?ara=" + seciliKelime;
 
-  if (seciliKelime != "") {
-    fetch(url, {
-      method: "post",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        if (!data.hasOwnProperty("error")) {
-          sonuc = data[0].anlamlarListe[0].anlam;
-          tur = data[0].anlamlarListe[0].ozelliklerListe[0].tam_adi + ":";
-          if (data[0].anlamlarListe[0].hasOwnProperty("orneklerListe")) {
-            ornekCumle = data[0].anlamlarListe[0].orneklerListe[0].ornek;
+function seciliKelime(event) {
+  let secili = window.getSelection().toString().toLowerCase();
+  if(secili.trim() != ""){
+  var port = chrome.runtime.connect();
+  port.postMessage({
+    kelime: `${secili}`
+  });
+  port.onMessage.addListener((data) => {
+   return elementOlustur(event, data.data);
+  })
+}
+}
 
-            ornekCumle = ornekCumle.replace(
-              seciliKelime,
-              `<strong><i>${seciliKelime}</i></strong>`
-            );
-          } else ornekCumle = "";
-        } else {
-          sonuc = "Kelime bulunamadi...!";
-          tur = "";
-          ornekCumle = "";
-        }
-      })
-      .then(() => {
-        a.shadowRoot.innerHTML = `
+
+
+function elementOlustur(event,data) {
+  let pozisyon = mousePozisyon(event);
+  if (!data.hasOwnProperty("error")) {
+    sonuc = data[0].anlamlarListe[0].anlam;
+    tur = data[0].anlamlarListe[0].ozelliklerListe[0].tam_adi + ":";
+    if (data[0].anlamlarListe[0].hasOwnProperty("orneklerListe")) {
+      ornekCumle = data[0].anlamlarListe[0].orneklerListe[0].ornek;
+
+      ornekCumle = ornekCumle.replace(
+        seciliKelime,
+        `<strong><i>${seciliKelime}</i></strong>`
+      );
+    } else ornekCumle = "";
+  } else {
+    sonuc = "Kelime bulunamadi...!";
+    tur = "";
+    ornekCumle = "";
+  }
+  a.shadowRoot.innerHTML = `
         <style>
         main {
           color: #333;
@@ -79,8 +81,12 @@ function seciliKelime() {
             font-weight: 700;
         }
 
-        p:nth-last:child(1){
-            margin-top: 5px;
+        p:nth-child(1){
+            margin-top: 0px;
+        }
+
+        p:nth-child(2){
+          margin-top: 3px;
         }
         </style>
 
@@ -93,10 +99,9 @@ function seciliKelime() {
         </main>
 
       `;
-        document.body.appendChild(a);
-      });
-  }
+  document.body.appendChild(a);
 }
+
 
 function mousePozisyon(event) {
   var eventDoc, doc, body;
@@ -106,10 +111,10 @@ function mousePozisyon(event) {
   if (event.pageX == null && event.clientX != null) {
     eventDoc = (event.target && event.target.ownerDocument) || document;
     event.pageX =
-    doc = eventDoc.documentElement;
+      doc = eventDoc.documentElement;
     body = eventDoc.body;
 
-      event.clientX +
+    event.clientX +
       ((doc && doc.scrollLeft) || (body && body.scrollLeft) || 0) -
       ((doc && doc.clientLeft) || (body && body.clientLeft) || 0);
     event.pageY =
