@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "Lügat",
+    "description": "Fareyle kelimeyi seçin ve anlamı gözüksün",
+    "version": "1.0",
+    "permissions": [
+        "activeTab"
+    ],
+    "content_scripts": [
+        {   
+            "matches": [
+               "<all_urls>"   
+            ],
+            "js": ["content.js"]
+        }
+    ],
+
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "icons": {
+        "32": "images/book32.png",
+        "64": "images/book64.png"
+    }
+
+}
