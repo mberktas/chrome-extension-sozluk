@@ -2,37 +2,33 @@ console.log("Chrome extension go");
 
 // istekleri fetchleri background js e geçir iconu degiştir
 
-
 window.addEventListener("mouseup", seciliKelime);
 window.addEventListener("mousedown", elementKaldir);
 
 let a = document.createElement("turkce-sozluk");
 var sonuc, tur, ornekCumle;
 let b = a.attachShadow({
-  mode: 'open'
-})
+  mode: "open",
+});
 
 function elementKaldir() {
   if (document.body.appendChild(a)) a.parentNode.removeChild(a);
 }
 
-
 function seciliKelime(event) {
   let secili = window.getSelection().toString().toLowerCase();
-  if(secili.trim() != ""){
-  var port = chrome.runtime.connect();
-  port.postMessage({
-    kelime: `${secili}`
-  });
-  port.onMessage.addListener((data) => {
-   return elementOlustur(event, data.data);
-  })
+  if (secili.trim() != "") {
+    var port = chrome.runtime.connect();
+    port.postMessage({
+      kelime: `${secili}`,
+    });
+    port.onMessage.addListener((data) => {
+      return elementOlustur(event, data.data);
+    });
+  }
 }
-}
 
-
-
-function elementOlustur(event,data) {
+function elementOlustur(event, data) {
   let pozisyon = mousePozisyon(event);
   if (!data.hasOwnProperty("error")) {
     sonuc = data[0].anlamlarListe[0].anlam;
@@ -102,7 +98,6 @@ function elementOlustur(event,data) {
   document.body.appendChild(a);
 }
 
-
 function mousePozisyon(event) {
   var eventDoc, doc, body;
 
@@ -110,8 +105,7 @@ function mousePozisyon(event) {
 
   if (event.pageX == null && event.clientX != null) {
     eventDoc = (event.target && event.target.ownerDocument) || document;
-    event.pageX =
-      doc = eventDoc.documentElement;
+    event.pageX = doc = eventDoc.documentElement;
     body = eventDoc.body;
 
     event.clientX +

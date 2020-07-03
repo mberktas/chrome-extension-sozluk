@@ -18,7 +18,11 @@
     "background": {
         "scripts": ["background.js"]
     },
-
+    "browser_action":{
+        "default_popup": "popup.html"
+        
+    },
+    
     "icons": {
         "32": "images/book32.png",
         "64": "images/book64.png"

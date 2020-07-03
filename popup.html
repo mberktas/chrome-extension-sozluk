@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+  <meta charset="UTF-8" />
+<head>
+  <style>
+    button {
+      height: 30px;
+      width: 30px;
+      outline: none;
+    }
+    #word{
+      border: 1px solid #e6e6ee;
+      border-radius: 5px;
+      padding-left: 5px;
+      height: 30px;
+    }
+    #word:focus{
+      outline: black;
+      outline-style: auto;
+      outline-offset: .3px;
+    }
+    #content{
+      height: 50px;
+      margin-top: 30px;
+      font-size: 16px;
+      margin-bottom: 50px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="app">
+    <input type="text" autofocus id="word" placeholder="kelime giriniz">
+    <div id="content">...</div>
+  </div>
+
+  <script src="popup.js" charset="ISO-8859-1"></script>
+</body>
+
+</html>
