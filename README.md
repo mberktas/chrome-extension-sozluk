@@ -1,4 +1,4 @@
-# chrome-extension-lugat
+# chrome-extension-sozluk
 turkish dictionary for chrome
 
 
